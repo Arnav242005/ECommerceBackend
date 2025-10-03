@@ -78,6 +78,32 @@ public class OrderService {
     }
 
     public List<OrderResponse> getAllorderResponses() {
-        return null;
+       List<Order> orders = repo.findAll();
+       List<OrderResponse> orderResponses = new ArrayList<>();
+
+       for(Order order : orders){
+
+           List<OrderItemResponse> itemResponses = new ArrayList<>();
+
+           for(OrderItem item: order.getOrderItems()){
+               OrderItemResponse orderItemResponse = new OrderItemResponse(
+                       item.getProduct().getName(),
+                       item.getQuantity(),
+                       item.getTotalPrice()
+               );
+               itemResponses.add(orderItemResponse);
+           }
+
+           OrderResponse orderResponse = new OrderResponse(
+                   order.getOrderId(),
+                   order.getCustomerName(),
+                   order.getEmail(),
+                   order.getStatus(),
+                   order.getOrderDate(),
+                   itemResponses
+           );
+           orderResponses.add(orderResponse);
+       }
+       return orderResponses;
     }
 }
